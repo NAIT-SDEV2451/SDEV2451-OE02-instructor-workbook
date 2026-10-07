@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import VehiclesAndDriversPage from './pages/VehiclesAndDriversPage'
 import TripsPage from './pages/TripsPage'
 import CreateTripPage from './pages/CreateTripPage'
+import TripDetailPage from './pages/TripDetailPage'
 
 const queryClient = new QueryClient()
 
@@ -49,6 +50,7 @@ function App() {
             <Routes>
               <Route path="/" element={<VehiclesAndDriversPage />} />
               <Route path="/trips" element={<TripsPage />} />
+              <Route path="/trips/:id" element={<TripDetailPage />} />
               <Route path="/trips/new" element={<CreateTripPage />} />
             </Routes>
           </main>

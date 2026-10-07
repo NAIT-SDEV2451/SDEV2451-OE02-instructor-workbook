@@ -1,5 +1,5 @@
 export const STATUS_BADGE = {
-    pending: 'badge-ghost',
+    pending: 'badge-secondary',
     in_progress: 'badge-info',
     completed: 'badge-success',
     failed: 'badge-error',

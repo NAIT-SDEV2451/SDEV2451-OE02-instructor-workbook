@@ -1,7 +1,7 @@
 import time
 from datetime import timedelta
 
-from django.db.models import Avg, Count
+from django.db.models import Avg
 from django.db.models.functions import TruncWeek
 from django.utils import timezone
 from geopy.distance import geodesic
@@ -11,6 +11,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
 
 from fleet.models import Driver, Trip, Vehicle
 from fleet.serializers import DriverSerializer, TripSerializer, VehicleSerializer
@@ -131,6 +132,21 @@ class TripViewSet(ModelViewSet):
     def complete(self, request, pk=None):
         trip = self.get_object()
         trip.status = Trip.STATUS_COMPLETED
+        trip.end_time = timezone.now()
+        trip.save(update_fields=["status", "end_time"])
+        return Response(self.get_serializer(trip).data)
+
+    @action(detail=True, methods=["post"])
+    def fail(self, request, pk=None):
+        trip = self.get_object()
+
+        if trip.status not in {Trip.STATUS_PENDING, Trip.STATUS_IN_PROGRESS}:
+            return Response(
+                {"detail": "Only pending or in-progress trips can fail."},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        trip.status = Trip.STATUS_FAILED
         trip.end_time = timezone.now()
         trip.save(update_fields=["status", "end_time"])
         return Response(self.get_serializer(trip).data)
