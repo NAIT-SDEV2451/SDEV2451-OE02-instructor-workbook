@@ -18,8 +18,8 @@ export async function fetchDrivers(search = '') {
   return response.json()
 }
 
-export async function fetchTrips() {
-  const response = await fetch(`${BASE_URL}/trips/`)
+export async function fetchTrips(page = 1) {
+  const response = await fetch(`${BASE_URL}/trips/?page=${page}`)
   if (!response.ok) throw new Error('Failed to fetch trips')
   return response.json()
 }

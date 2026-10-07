@@ -3,18 +3,22 @@ import TripForm from '../components/TripForm'
 import { useVehicles } from '../hooks/useVehicles'
 import { useDrivers } from '../hooks/useDrivers'
 import { useCreateTrip } from '../hooks/useTrips'
+import { useNotification } from '../hooks/useNotification'
 
 function CreateTripPage() {
   const navigate = useNavigate()
   const { vehicles } = useVehicles()
   const { drivers } = useDrivers()
   const { mutate: createTrip, isPending } = useCreateTrip()
+  const { showSuccess, showError } = useNotification()
 
   function handleSubmit(formData) {
     createTrip(formData, {
       onSuccess: () => {
+        showSuccess('Trip Created Successfully')
         navigate('/trips')
       },
+      onError: () => showError('Failed to create trip. Please try again')
     })
   }
 
