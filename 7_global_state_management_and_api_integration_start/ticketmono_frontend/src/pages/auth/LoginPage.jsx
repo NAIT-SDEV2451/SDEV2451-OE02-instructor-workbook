@@ -1,8 +1,15 @@
+import { useNavigate } from 'react-router-dom'
 import LoginForm from '../../components/LoginForm'
+import { useAuth } from '../../hooks/useAuth'
 
 function LoginPage() {
+  const { login, isLoggingIn, loginError } = useAuth()
+  const navigate = useNavigate()
+
   function handleSubmit(formData) {
-    console.log("Login submitted:", formData)
+    login(formData, {
+      onSuccess: () => navigate("/")
+    })
   }
   
   return (
@@ -12,7 +19,12 @@ function LoginPage() {
           <h2 className="card-title text-2xl mb-2">
             Log In
           </h2>
-          <LoginForm onSubmit={handleSubmit} />
+          {loginError && (
+            <div className="alert alert-error">
+              <span>{loginError.message}</span>
+            </div>
+          )}
+          <LoginForm onSubmit={handleSubmit} isLoading={isLoggingIn} />
         </div>
       </div>
     </div>
