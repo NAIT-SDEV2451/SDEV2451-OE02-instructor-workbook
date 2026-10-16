@@ -538,6 +538,10 @@ Let's talk about what this code is doing.
 
 ---
 
+
+THIS IS WHERE WE GOT TO IN THE CLASS THIS EVENIGN
+
+
 ### 16. Create `src/components/TicketTierSelector.jsx`
 
 `TicketTierSelector` displays a single ticket tier with a quantity selector. It owns its own `quantity` state so each tier is controlled independently.
