@@ -37,6 +37,11 @@ function CheckoutPage() {
           </div>
         </div>
       )}
+      <div className="mt-6">
+        <button className="btn btn-primary w-full">
+          Place Order
+        </button>
+      </div>
     </div>
   )
 }
