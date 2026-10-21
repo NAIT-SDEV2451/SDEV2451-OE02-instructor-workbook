@@ -30,7 +30,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         tickets = []
         for item in serializer.validated_data["items"]:
-            tier = TicketTier.obejcts.get(id=item["ticket_tier_id"])
+            tier = TicketTier.objects.get(id=item["ticket_tier_id"])
             for _ in range(item["quantity"]):
                 tickets.append(Ticket.objects.create(tier=tier))
 
