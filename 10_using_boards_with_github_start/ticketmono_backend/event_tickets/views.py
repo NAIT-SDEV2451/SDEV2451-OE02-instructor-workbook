@@ -6,6 +6,7 @@ from .models import Event, Order, Ticket, TicketTier
 from .serializers import (
     CreateNewOrderSerializer,
     EventListReadOnlySerializer,
+    OrderDetailSerializer,
     OrderSerializer,
 )
 
@@ -24,7 +25,11 @@ class EventViewSet(viewsets.ModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
-    serializer_class = OrderSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return OrderDetailSerializer
+        return OrderSerializer
 
     def get_queryset(self):
         return Order.objects.filter(customer=self.request.user)
@@ -43,3 +48,4 @@ class OrderViewSet(viewsets.ModelViewSet):
         order.tickets.set(tickets)
 
         return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+
