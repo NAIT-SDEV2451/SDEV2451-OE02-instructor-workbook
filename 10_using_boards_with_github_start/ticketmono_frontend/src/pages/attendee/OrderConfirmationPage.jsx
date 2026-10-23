@@ -1,25 +1,21 @@
 import { useParams } from 'react-router-dom'
-
-const mockOrder = {
-    id: 1,
-    tickets: [
-        {
-            id: 1,
-            eventName: 'Summer Music Festival',
-            tierName: 'General Admission',
-            quantity: 2,
-        },
-        {
-            id: 2,
-            eventName: 'Summer Music Festival',
-            tierName: 'VIP',
-            quantity: 1,
-        }
-    ]
-}
+import { useOrder } from '../../hooks/useOrder'
 
 function OrderConfirmationPage() {
     const { id } = useParams()
+    const { data: order, isLoading, isError} = useOrder(id)
+
+    if (isLoading) {
+        return <p className="text-center py-8">
+            Loading your order...
+        </p>
+    }
+
+    if (isError) {
+        return <p className="text-center py-8 text-error">
+            Failed to load order. Please try again!
+        </p>
+    }
 
     return (
        <div className="max-w-2xl mx-auto px-4 py-8">
@@ -27,7 +23,7 @@ function OrderConfirmationPage() {
                 <h1 className="text-3xl font-bold mb-2">
                     Order Confirmed!
                 </h1>
-                <p className="text-base-content/60">Order #{id}</p>
+                <p className="text-base-content/60">Order #{order.id}</p>
             </div>
 
             <div className="card bg-base-100 shadow">
@@ -36,20 +32,22 @@ function OrderConfirmationPage() {
                         Your Tickets
                     </h2>
                     {
-                        mockOrder.tickets.map((ticket) => (
-                            <div 
-                                className="flex justify-between items-center py-3 border-b border-base-300 last:border-0"
-                                key={ticket.id}
-                            >
-                                <div>
-                                    <p className="font-semibold">{ticket.eventName}</p>
+                        order.tickets.map((ticket) => (
+                          <div key={ticket.id} className="py-3 border-b border-base-300 last:border-0">
+                                <p className="font-semibold mb-1">{ticket.tier.event_name}</p>
+                                <div className="flex justify-between item-center">
                                     <p className="text-sm text-base-content/60">
-                                        {ticket.tierName} x {ticket.quantity}
+                                        {ticket.tier.name} x 1
                                     </p>
+                                    <p className="font-medium text-right">${parseFloat(ticket.tier.price).toFixed(2)}</p>
                                 </div> 
                             </div>
                         ))
                     }
+                    <div className="flex justify-between pt-4 font-bold text-lg">
+                        <span>Total</span>
+                        <span>${parseFloat(order.total_price).toFixed(2)}</span>
+                    </div>
                 </div>    
             </div>
        </div> 
